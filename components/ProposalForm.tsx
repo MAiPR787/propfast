@@ -94,10 +94,38 @@ export default function ProposalForm() {
 
   async function handleGenerate() {
     setIsGenerating(true);
-    // Simulate AI processing time for effect
-    await new Promise((r) => setTimeout(r, 2200));
 
-    const content = generateProposal(formData);
+    let content: string;
+    try {
+      const res = await fetch('/api/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          projectType: formData.projectType,
+          clientName: formData.clientName,
+          clientCompany: formData.clientCompany,
+          clientEmail: formData.clientEmail,
+          projectDescription: formData.projectDescription,
+          timeline: formData.timeline,
+          price: formData.price,
+          userName: formData.yourName,
+          userBusiness: formData.businessName,
+          userEmail: formData.yourEmail,
+        }),
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        content = data.proposal;
+      } else {
+        // API unavailable or key not set — fall back to templates
+        content = generateProposal(formData);
+      }
+    } catch {
+      // Network error — fall back to templates
+      content = generateProposal(formData);
+    }
+
     const id = generateId();
 
     const proposal = {
