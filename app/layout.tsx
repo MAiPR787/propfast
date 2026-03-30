@@ -21,6 +21,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={geist.variable}>
+      <head>
+        <script defer data-domain="propfast.vercel.app" src="https://plausible.io/js/script.js"></script>
+      </head>
       <body className="min-h-screen bg-white text-gray-900 antialiased font-sans">
         <Navbar />
         <main className="pt-16">
